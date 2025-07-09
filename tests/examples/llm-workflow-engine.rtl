@@ -1,0 +1,36 @@
+# LLM Workflow Engine - Uses Rutile's combinators for parallel processing
+# Shows something Python can't do elegantly: native parallel LLM processing with stack combinators
+
+: llm-analyze ( prompt -- response )
+  "Analyze: " swap concat llm-default-config swap llm-call
+;
+
+: llm-summarize ( text -- summary )
+  "Summarize: " swap concat llm-default-config swap llm-call
+;
+
+: llm-critique ( text -- critique )
+  "Critique: " swap concat llm-default-config swap llm-call
+;
+
+# Use Rutile's native combinators to process in parallel
+: parallel-llm-pipeline ( topic -- results )
+  # Create multiple copies of topic on stack
+  dup dup dup
+  
+  # Apply different LLM functions to each copy
+  [ llm-analyze ] [ llm-summarize ] [ llm-critique ] tri
+  
+  # Stack now has: analysis summary critique
+;
+
+# Test the parallel pipeline
+"artificial intelligence in healthcare" parallel-llm-pipeline
+
+# Print results
+"=== CRITIQUE ===" print-top
+print-top
+"=== SUMMARY ===" print-top  
+print-top
+"=== ANALYSIS ===" print-top
+print-top

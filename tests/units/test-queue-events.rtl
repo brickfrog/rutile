@@ -1,0 +1,42 @@
+# Test queue event sources
+
+"Testing @queue operations..." .
+
+# Create a queue
+"test-queue" @queue.create drop
+
+# Push some items
+42 "test-queue" queue-push
+"hello" "test-queue" queue-push  
+"world" "test-queue" queue-push
+
+# Check queue size
+"test-queue" queue-size "Queue size:" swap . .
+
+# Pop and display items
+"Popping items:" .
+"test-queue" queue-pop .
+"test-queue" queue-pop .
+"test-queue" queue-pop .
+
+# Test queue polling
+: queue-processor
+  "Processing queue message:" .
+  .  # Print the message that was pushed to stack
+;
+
+"test-queue" 1000 [queue-processor] @queue.poll drop
+
+"Queue poller started - adding messages..." .
+
+# Add messages to be processed
+"message1" "test-queue" queue-push
+"message2" "test-queue" queue-push
+
+"Waiting for queue processing..." .
+3000 sleep
+
+"Queue event tests complete!" .
+
+# Clean up
+"test-queue" queue-destroy

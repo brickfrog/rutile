@@ -1,0 +1,9 @@
+# Test word inlining optimization
+
+"Testing word inlining..." .
+
+# Test simple inlining - should inline short words
+[: small 1 2 + ; small small] 
+"conservative" inline-words
+"Original: [: small 1 2 + ; small small]" .
+"Inlined (conservative):" . .

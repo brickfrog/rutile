@@ -1,0 +1,52 @@
+# Racket compiled files
+compiled/
+*.zo
+*.dep
+
+# Build artifacts
+dist/
+build/
+rtl
+rtl.exe
+
+# Development files that shouldn't be committed
+OPENAISPEC.md
+BUILD.md
+SYNTAX_HIGHLIGHTING.md
+TESTING.md
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Log files
+*.log
+
+# Temporary files
+tmp/
+temp/
+.tmp
+
+# Environment files
+.env
+.env.local
+
+# Node.js (if any tooling uses it)
+node_modules/
+npm-debug.log*
+
+# Python (if any tooling uses it)
+__pycache__/
+*.pyc
+*.pyo
+
+# Backup files
+*.bak
+*.backup

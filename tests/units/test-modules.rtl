@@ -1,0 +1,31 @@
+# Test module system
+
+"Testing module system..." .
+
+# Test 1: Import entire module
+"math-utils" import
+
+# Test square function
+5 square .  # Should output 25
+
+# Test cube function  
+3 cube .    # Should output 27
+
+# Test 2: Import specific functions from a module
+["repeat-string" "word-count"] "string-utils" from-module
+
+# Test repeat-string
+"hi" 3 repeat-string .  # Should output "hihihi"
+
+# Test word-count
+"hello world test" word-count .  # Should output 3
+
+# Test 3: List loaded modules
+"Loaded modules:" .
+list-modules .
+
+# Test 4: Get module exports
+"math-utils" module-exports .
+
+# Test 5: Get module info
+"math-utils" module-info .

@@ -1,0 +1,26 @@
+# Test timer event sources
+
+"Testing @timer.every..." .
+
+# Create a timer that prints every 2 seconds
+: timer-callback
+  "Timer fired!" .
+;
+
+2000 [timer-callback] @timer.every drop
+
+# Let it run for a bit  
+"Timer started - waiting 6 seconds..." .
+6000 sleep
+
+# Test one-shot timer
+: once-callback  
+  "One-shot timer fired!" .
+;
+
+1000 [once-callback] @timer.once drop
+
+"One-shot timer scheduled - waiting 2 seconds..." .
+2000 sleep
+
+"Timer tests complete!" .

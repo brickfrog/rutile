@@ -1,0 +1,64 @@
+# Rutile Language Showcase
+# Demonstrating the complete feature set
+
+"=== Rutile Language Showcase ===" .
+
+# 1. Basic concatenative operations
+"1. Basic Operations:" .
+42 dup + .  # Should print 84
+
+# 2. Word definitions and control flow
+: factorial
+  dup 1 > if
+    dup 1 - factorial *
+  else
+    drop 1
+  then
+;
+
+"2. Factorial of 5:" .
+5 factorial .
+
+# 3. List operations and combinators
+"3. List Processing:" .
+[1 2 3 4 5] [dup *] map .  # Square each number
+
+# 4. Event system demonstration
+"4. Event System - Creating a timer:" .
+2000 ["Timer event fired!"] @timer.once
+"Timer created (will fire in 2 seconds)" .
+
+# 5. Optimization showcase
+"5. Code Optimization:" .
+[dup drop swap swap 0 +] peephole-optimize
+"Optimized redundant operations:" . .
+
+# 6. JSON and data handling
+"6. JSON Processing:" .
+"Simple JSON operations ready" .
+
+# 7. Error handling
+"7. Error Handling:" .
+try
+  "This works fine" .
+catch
+  "Error occurred" .
+finally
+  "Cleanup complete" .
+
+# 8. Hot reload capability
+"8. Hot Reload Status:" .
+hot-reload-status .
+
+# 9. Module system  
+"9. Module System Ready" .
+list-modules .
+
+# 10. Performance and debugging ready
+"10. Development Tools Available:" .
+"   - Development REPL (racket main.rkt dev)" .
+"   - Debugger (racket main.rkt debug)" .
+"   - Performance profiling built-in" .
+
+"=== Showcase Complete ===" .
+"Rutile: A full-featured concatenative language for LLM orchestration" .

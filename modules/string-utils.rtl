@@ -1,0 +1,24 @@
+# String utilities module
+
+: repeat-string
+  # "str" n repeat-string -> repeated string
+  swap over 
+  [ over concat ] times
+  nip ;
+
+: capitalize  
+  # Basic capitalization (first char uppercase)
+  dup length 0 = [ ] 
+  [ dup 0 1 substr "A" "Z" "a" "z" ] if ;
+
+: reverse-string
+  # Reverse a string
+  "" swap 
+  [ swap over concat swap ] each
+  drop ;
+
+: word-count
+  # Count words in a string
+  " " split length ;
+
+["repeat-string" "capitalize" "reverse-string" "word-count"] "string-utils" { exports: ["repeat-string" "capitalize" "reverse-string" "word-count"] } module

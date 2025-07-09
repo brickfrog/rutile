@@ -1,0 +1,8 @@
+# Simple module test - just test basic loading
+"Testing simple module loading..." .
+
+# Test list modules (should be empty initially)  
+"Initial modules:" .
+list-modules .
+
+"Test complete." .

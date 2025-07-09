@@ -1,0 +1,19 @@
+# Simple property-based testing example
+
+# Generate some sample integers
+"Sample integers:" print-top
+-10 10 gen-integer 5 sample print-top
+
+# Generate some sample strings
+"Sample strings:" print-top
+5 gen-string 3 sample print-top
+
+# Generate some sample booleans
+"Sample booleans:" print-top
+gen-boolean 5 sample print-top
+
+# Test a simple property: x + 0 = x
+"Testing x + 0 = x property..." print-top
+-100 100 gen-integer [0 + =] forall 50 quick-check print-top
+
+"Simple property test complete!" print-top

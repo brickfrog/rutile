@@ -1,0 +1,30 @@
+# Evolving Agent - Hot-reloads its own behavior based on LLM responses
+# This is impossible in Python - modifying running code based on AI feedback
+
+: analyze-performance ( task result -- improvement-code )
+  "Task: " swap concat " | Result: " rot concat concat
+  " | Write Rutile code to improve this task performance: " concat
+  llm-default-config swap llm-call
+;
+
+: save-improvement ( code -- )
+  "/tmp/agent-improvement.rtl" write-file
+;
+
+: evolve-self ( task -- result )
+  # Do the task
+  dup "Execute this task: " swap concat
+  llm-default-config swap llm-call
+  
+  # Analyze how to improve
+  over swap analyze-performance
+  
+  # Save the improvement and hot-reload it
+  dup save-improvement
+  "/tmp/agent-improvement.rtl" hot-reload-enable
+  
+  "Agent has evolved! New capabilities loaded." print-top
+;
+
+# Test evolution
+"Summarize quantum computing concepts" evolve-self print-top

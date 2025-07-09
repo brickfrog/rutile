@@ -1,0 +1,2 @@
+# Simple OpenAI test
+"What is 2 + 2?" llm.default_cfg llm.call .

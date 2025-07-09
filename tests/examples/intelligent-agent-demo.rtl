@@ -1,0 +1,318 @@
+# Intelligent Agent Demo - Real-world LLM Agent Patterns
+# Demonstrates autonomous decision-making, task planning, and adaptive behavior
+
+# ============================================================================
+# Agent Configuration and State Management
+# ============================================================================
+
+: agent-init
+  # Set up agent with reasoning capabilities
+  "gpt-4o" llm-set-model
+  {temperature 0.4} llm-set-config
+  "Agent initialized with reasoning and tools" print-top
+;
+
+# ============================================================================
+# Task Planning and Decomposition
+# ============================================================================
+
+: plan-task ( task-description -- execution-plan )
+  "You are an intelligent agent. Break down this complex task into specific, 
+actionable steps. For each step, specify:
+1. What needs to be done
+2. What tools/capabilities are needed  
+3. Expected outcome
+4. Dependencies on previous steps
+
+Task: " swap concat
+  llm-call
+;
+
+: prioritize-steps ( execution-plan -- prioritized-plan )
+  "Review this execution plan and prioritize the steps by:
+- Importance (1-5)
+- Urgency (1-5) 
+- Dependencies
+- Resource requirements
+
+Reorder if necessary and explain the prioritization logic.
+
+Plan: " swap concat
+  {temperature 0.2} llm-call
+;
+
+# ============================================================================
+# Adaptive Decision Making
+# ============================================================================
+
+: analyze-situation ( context -- decision )
+  "Analyze this situation and recommend the best course of action.
+Consider multiple options, weigh pros/cons, and make a clear recommendation
+with reasoning.
+
+Situation: " swap concat
+  llm-call
+;
+
+: adapt-strategy ( current-plan new-information -- updated-plan )
+  "Given this new information, adapt the current plan accordingly.
+Explain what changes are needed and why.
+
+Current Plan: " swap concat
+  "\n\nNew Information: " rot concat concat
+  {temperature 0.3} llm-call
+;
+
+# ============================================================================
+# Knowledge Acquisition and Research
+# ============================================================================
+
+: research-topic ( topic -- knowledge-base )
+  "Research this topic comprehensively. Gather current information,
+identify key concepts, and build a knowledge base that can inform
+future decisions.
+
+Topic: " swap concat
+  llm-call
+;
+
+: validate-information ( information -- validation-result )
+  "Critically evaluate this information for:
+- Accuracy and reliability
+- Potential biases
+- Currency (how up-to-date)
+- Source credibility
+- Completeness
+
+Information: " swap concat
+  {temperature 0.1} llm-call
+;
+
+# ============================================================================
+# Problem Solving and Reasoning
+# ============================================================================
+
+: solve-problem ( problem-description -- solution )
+  "Approach this problem systematically:
+1. Understand the problem thoroughly
+2. Identify constraints and requirements
+3. Generate multiple solution approaches
+4. Evaluate each approach
+5. Select and detail the best solution
+
+Problem: " swap concat
+  llm-call
+;
+
+: debug-solution ( solution issue -- fixed-solution )
+  "This solution has encountered an issue. Debug and fix it:
+- Identify what went wrong
+- Understand why it happened
+- Propose fixes
+- Prevent similar issues
+
+Solution: " swap concat
+  "\n\nIssue: " rot concat concat
+  llm-call
+;
+
+# ============================================================================
+# Communication and Interaction
+# ============================================================================
+
+: explain-to-audience ( content audience-type -- tailored-explanation )
+  "Adapt this content for the specified audience. Adjust:
+- Technical level
+- Language complexity  
+- Examples and analogies
+- Focus areas
+
+Content: " swap concat
+  "\n\nAudience: " rot concat concat
+  {temperature 0.6} llm-call
+;
+
+: generate-summary ( detailed-content -- executive-summary )
+  "Create a concise executive summary highlighting:
+- Key points
+- Main findings/recommendations
+- Critical implications
+- Next steps
+
+Content: " swap concat
+  {temperature 0.3 max_tokens 800} llm-call
+;
+
+# ============================================================================
+# Learning and Improvement
+# ============================================================================
+
+: analyze-performance ( task-results -- performance-analysis )
+  "Analyze the performance of this completed task:
+- What went well?
+- What could be improved?
+- What was learned?
+- How to apply learnings next time?
+
+Results: " swap concat
+  llm-call
+;
+
+: update-knowledge ( new-experience -- knowledge-update )
+  "Integrate this new experience into the knowledge base.
+Identify patterns, extract principles, and note important insights
+for future reference.
+
+Experience: " swap concat
+  {temperature 0.2} llm-call
+;
+
+# ============================================================================
+# Multi-Agent Coordination (Simulated)
+# ============================================================================
+
+: delegate-subtask ( subtask specialist-type -- specialized-result )
+  "Acting as a " swap concat " specialist, handle this subtask with
+domain expertise. Provide detailed, professional results.
+
+Subtask: " rot concat concat
+  {model "gpt-4o" temperature 0.3} llm-call
+;
+
+: coordinate-agents ( complex-task -- coordinated-result )
+  # Simulate multi-agent coordination
+  dup "technical expert" delegate-subtask
+  dup "business analyst" delegate-subtask  
+  "project manager" delegate-subtask
+  
+  # Synthesize results
+  "Synthesize these specialist perspectives into a unified solution:" 
+  swap concat
+  llm-call
+;
+
+# ============================================================================
+# Autonomous Agent Workflow
+# ============================================================================
+
+: autonomous-workflow ( high-level-goal -- final-result )
+  "Starting autonomous workflow for: " over concat print-top
+  
+  # Phase 1: Planning
+  "=== Phase 1: Task Planning ===" print-top
+  dup plan-task
+  prioritize-steps
+  
+  # Phase 2: Research
+  "=== Phase 2: Knowledge Acquisition ===" print-top
+  over research-topic
+  validate-information
+  
+  # Phase 3: Problem Solving
+  "=== Phase 3: Solution Development ===" print-top
+  rot solve-problem
+  
+  # Phase 4: Quality Assurance  
+  "=== Phase 4: Validation and Testing ===" print-top
+  dup "general audience" explain-to-audience
+  generate-summary
+  
+  # Phase 5: Learning
+  "=== Phase 5: Performance Analysis ===" print-top
+  analyze-performance
+  update-knowledge
+  
+  "Autonomous workflow completed!" print-top
+;
+
+# ============================================================================
+# Real-world Scenarios
+# ============================================================================
+
+: market-analysis-agent ( product-concept -- market-analysis )
+  autonomous-workflow
+;
+
+: technical-consultant ( technical-problem -- consultation-report )
+  # Multi-step technical consultation
+  dup plan-task
+  dup research-topic  
+  solve-problem
+  "technical stakeholders" explain-to-audience
+;
+
+: content-strategy-agent ( content-goals -- strategy-document )
+  # Content strategy development
+  dup analyze-situation
+  research-topic
+  coordinate-agents
+  generate-summary
+;
+
+# ============================================================================
+# Interactive Agent Sessions
+# ============================================================================
+
+: interactive-consultation ( initial-query -- )
+  # Start interactive session
+  dup autonomous-workflow
+  
+  # Follow-up questions
+  "What specific challenges do you foresee with this approach?" 
+  over ask-followup
+  
+  "How would you modify this for a smaller budget?"
+  swap ask-followup
+  
+  print-top
+  "Interactive consultation completed" print-top
+;
+
+# ============================================================================
+# Example Demonstrations
+# ============================================================================
+
+# Initialize the agent
+agent-init
+
+print-top "========================================" print-top
+
+# Demo 1: Market analysis
+"Launch strategy for an AI-powered personal finance app targeting millennials"
+market-analysis-agent print-top
+
+print-top "========================================" print-top
+
+# Demo 2: Technical consultation  
+"Optimize a microservices architecture for handling 1M+ daily API requests"
+technical-consultant print-top
+
+print-top "========================================" print-top
+
+# Demo 3: Content strategy
+"Develop content strategy for B2B SaaS company entering cybersecurity market"
+content-strategy-agent print-top
+
+print-top "========================================" print-top
+
+# Demo 4: Multi-agent coordination
+"Design a comprehensive employee onboarding program for remote-first startup"
+coordinate-agents print-top
+
+print-top "========================================" print-top
+
+# Demo 5: Interactive consultation
+"Create a digital transformation roadmap for traditional manufacturing company"
+interactive-consultation
+
+print-top "========================================" print-top
+
+# Demo 6: Problem solving with debugging
+"Implement real-time collaborative editing feature" solve-problem
+"Users experiencing sync conflicts and data loss" debug-solution print-top
+
+print-top "========================================" print-top
+
+# Demo 7: Adaptive planning
+"Product launch in Q2" plan-task
+"Major competitor launched similar product early" adapt-strategy print-top

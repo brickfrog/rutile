@@ -1,0 +1,78 @@
+# Simple Agent Demo - Working LLM Workflow
+# A simplified but functional agent demonstration
+
+# ============================================================================
+# Agent Setup
+# ============================================================================
+
+: agent-init
+  "gpt-4o" llm-set-model
+  {temperature 0.4} llm-set-config
+  "Agent initialized successfully" print-top
+;
+
+# ============================================================================
+# Basic Agent Functions
+# ============================================================================
+
+: plan-task ( task -- plan )
+  "Break down this task into 3 simple steps: " swap concat
+  llm-default-config swap llm-call
+;
+
+: analyze-situation ( context -- analysis )
+  "Analyze this situation and provide recommendations: " swap concat
+  {temperature 0.3} swap llm-call
+;
+
+: solve-problem ( problem -- solution )
+  "Provide a practical solution for: " swap concat
+  {temperature 0.2} swap llm-call
+;
+
+# ============================================================================
+# Multi-step Workflow
+# ============================================================================
+
+: agent-workflow ( task -- result )
+  "Starting agent workflow for: " over concat print-top
+  
+  # Step 1: Plan
+  "=== Planning Phase ===" print-top
+  dup plan-task
+  
+  # Step 2: Analyze
+  "=== Analysis Phase ===" print-top
+  dup analyze-situation
+  
+  # Step 3: Solve
+  "=== Solution Phase ===" print-top
+  solve-problem
+  
+  "=== Workflow Complete ===" print-top
+;
+
+# ============================================================================
+# Test the Agent
+# ============================================================================
+
+# Initialize agent
+agent-init
+
+# Test 1: Simple planning
+"Create a marketing strategy for a new mobile app" plan-task print-top
+
+"========================================" print-top
+
+# Test 2: Situation analysis
+"Our startup has limited budget but needs to grow quickly" analyze-situation print-top
+
+"========================================" print-top
+
+# Test 3: Problem solving
+"How to improve team productivity while working remotely" solve-problem print-top
+
+"========================================" print-top
+
+# Test 4: Full workflow
+"Launch an e-commerce business for handmade crafts" agent-workflow print-top

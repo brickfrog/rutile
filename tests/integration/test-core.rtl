@@ -1,0 +1,55 @@
+# CORE TESTS - Basic operations
+# Test basic stack operations
+1 2 3 depth 3 = assert
+1 2 3 drop 2 = assert
+1 2 dup 2 = assert
+1 2 swap 1 = assert
+1 2 3 rot 2 = assert
+1 2 over 1 = assert
+
+# Test arithmetic
+5 3 + 8 = assert
+10 4 - 6 = assert
+6 7 * 42 = assert
+20 4 / 5 = assert
+
+# Test comparisons
+5 3 > assert
+3 5 < assert
+5 5 = assert
+5 3 >= assert
+3 5 <= assert
+5 3 != assert
+
+# Test logic
+true false or assert
+true false and not assert
+false not assert
+
+# Test conditionals
+5 3 > ["bigger"] ["smaller"] if "bigger" = assert
+3 5 > ["bigger"] ["smaller"] if "smaller" = assert
+
+# Test lists
+[1 2 3] length 3 = assert
+[1 2 3] [dup *] map [1 4 9] = assert
+[1 2 3 4 5] [3 >] filter [4 5] = assert
+[1 2 3] 0 [+] fold 6 = assert
+
+# Test strings
+"hello" " world" concat "hello world" = assert
+"a,b,c" "," split ["a" "b" "c"] = assert
+"hello" length 5 = assert
+
+# Test type predicates
+42 number? assert
+"test" string? assert
+[1 2 3] list? assert
+true boolean? assert
+
+# Test advanced stack ops
+1 2 3 4 5 2 pick 3 = assert
+1 2 3 4 5 2 roll 3 = assert
+1 2 3 4 5 depth 5 = assert
+
+"All core tests passed!" .

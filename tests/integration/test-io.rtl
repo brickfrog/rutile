@@ -1,0 +1,27 @@
+# I/O TESTS - File operations and system interaction
+# Test file operations
+"test content" "test-file.txt" write-file drop
+"test-file.txt" file-exists? assert
+"test-file.txt" read-file "test content" = assert
+"test-file.txt" delete-file drop
+
+# Test math functions
+pi 3.14159 - abs 0.001 < assert
+30 sin -0.988 - abs 0.001 < assert
+45 cos 0.525 - abs 0.001 < assert
+2 3 pow 8 = assert
+-5 abs 5 = assert
+3.7 floor 3 = assert
+3.7 ceiling 4 = assert
+
+# Test date/time (basic existence checks)
+now number? assert
+time string? assert
+date string? assert
+
+# Test I/O primitives
+"test line" "test-io.txt" write-file drop
+"test-io.txt" read-file "test line" = assert
+"test-io.txt" delete-file drop
+
+"All I/O tests passed!" .

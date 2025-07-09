@@ -1,0 +1,9 @@
+# Test variable binding
+42 "x" bind
+"x" get-local .
+"x" get-local 42 = assert
+
+"Hello" "msg" bind
+"msg" get-local .
+
+"Variables work!" .

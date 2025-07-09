@@ -1,0 +1,7 @@
+# Test simple constant folding
+
+"Simple test: 1 2 +" .
+[1 2 +] fold-constants . 
+
+"More complex test: 1 2 + 3 *" .
+[1 2 + 3 *] fold-constants .

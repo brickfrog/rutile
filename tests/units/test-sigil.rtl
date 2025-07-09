@@ -1,0 +1,7 @@
+# Test @webhook.listen sigil  
+: my-handler
+  "Hello" .
+;
+
+"http://localhost:8080/callback" [my-handler] webhook-listen
+"Sigil webhook test complete!" .

@@ -1,0 +1,24 @@
+# Test bytecode compilation and execution
+
+# Test 1: Basic arithmetic with compilation
+[2 3 +] compile show-bytecode bytecode-exec .
+
+# Test 2: More complex expression
+[5 4 * 2 - 3 /] compile optimize show-bytecode bytecode-exec .
+
+# Test 3: Compare performance of regular vs bytecode execution
+# Regular execution
+2 3 +
+.
+
+# Bytecode execution of same operation
+[2 3 +] compile bytecode-exec .
+
+# Test 4: Stack operations
+[1 2 3 swap drop] compile show-bytecode bytecode-exec .
+
+# Test 5: Constant folding test
+[10 5 *] compile show-bytecode   # Should show optimized version
+
+# Test 6: String operations
+["hello" " " "world" concat concat] compile show-bytecode bytecode-exec .

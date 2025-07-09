@@ -1,0 +1,193 @@
+{
+  "name": "Rutile",
+  "scopeName": "source.rutile",
+  "fileTypes": ["rtl"],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#word-definitions"
+    },
+    {
+      "include": "#quotations"
+    },
+    {
+      "include": "#maps"
+    },
+    {
+      "include": "#builtin-words"
+    },
+    {
+      "include": "#llm-words"
+    },
+    {
+      "include": "#agent-words"
+    },
+    {
+      "include": "#control-words"
+    },
+    {
+      "include": "#stack-words"
+    },
+    {
+      "include": "#math-words"
+    },
+    {
+      "include": "#io-words"
+    },
+    {
+      "include": "#webhook-sigil"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.rutile",
+          "begin": "#",
+          "end": "$"
+        },
+        {
+          "name": "comment.block.rutile",
+          "begin": "\\(",
+          "end": "\\)",
+          "patterns": [
+            {
+              "include": "#comments"
+            }
+          ]
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.rutile",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.rutile",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.rutile",
+          "match": "\\b-?\\d+(\\.\\d+)?\\b"
+        }
+      ]
+    },
+    "word-definitions": {
+      "patterns": [
+        {
+          "name": "keyword.control.definition.rutile",
+          "match": "\\b(:|;)\\b"
+        }
+      ]
+    },
+    "quotations": {
+      "patterns": [
+        {
+          "name": "meta.quotation.rutile",
+          "begin": "\\[",
+          "end": "\\]",
+          "patterns": [
+            {
+              "include": "$self"
+            }
+          ]
+        }
+      ]
+    },
+    "maps": {
+      "patterns": [
+        {
+          "name": "meta.map.rutile",
+          "begin": "\\{",
+          "end": "\\}",
+          "patterns": [
+            {
+              "include": "$self"
+            }
+          ]
+        }
+      ]
+    },
+    "builtin-words": {
+      "patterns": [
+        {
+          "name": "keyword.other.builtin.rutile",
+          "match": "\\b(dup|drop|swap|rot|over|pick|roll|depth|2dup|2drop|2swap|nip|tuck|3dup|3drop)\\b"
+        }
+      ]
+    },
+    "llm-words": {
+      "patterns": [
+        {
+          "name": "keyword.other.llm.rutile",
+          "match": "\\b(llm-call|llm-default-config|llm-stream|llm-multi-turn)\\b"
+        }
+      ]
+    },
+    "agent-words": {
+      "patterns": [
+        {
+          "name": "keyword.other.agent.rutile",
+          "match": "\\b(spawn-agent|agent-send|agent-receive|agent-kill|agent-list|supervise-agent|start-supervisor|stop-supervisor|agent-info|agent-health)\\b"
+        }
+      ]
+    },
+    "control-words": {
+      "patterns": [
+        {
+          "name": "keyword.control.rutile",
+          "match": "\\b(if|then|else|while|times|each|map|filter|fold|try|catch|throw|finally)\\b"
+        }
+      ]
+    },
+    "stack-words": {
+      "patterns": [
+        {
+          "name": "keyword.other.stack.rutile",
+          "match": "\\b(print-top|clear-stack|show-words|show-stack)\\b"
+        }
+      ]
+    },
+    "math-words": {
+      "patterns": [
+        {
+          "name": "keyword.other.math.rutile",
+          "match": "\\b(\\+|\\-|\\*|\\/|=|<|>|<=|>=|!=|and|or|not|sin|cos|tan|log|exp|sqrt|pow|abs|min|max|random|pi|e)\\b"
+        }
+      ]
+    },
+    "io-words": {
+      "patterns": [
+        {
+          "name": "keyword.other.io.rutile",
+          "match": "\\b(read-file|write-file|append-file|file-exists\\?|delete-file|read-line|write-line)\\b"
+        }
+      ]
+    },
+    "webhook-sigil": {
+      "patterns": [
+        {
+          "name": "keyword.other.webhook.rutile",
+          "match": "@\\w+"
+        }
+      ]
+    }
+  }
+}

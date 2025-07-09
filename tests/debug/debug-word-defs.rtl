@@ -1,0 +1,5 @@
+# Debug word definitions
+
+: test-word 1 2 + ;
+
+"Defined a test word, checking format..." .

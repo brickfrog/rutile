@@ -1,0 +1,43 @@
+# Test file event sources
+
+"Testing @file.watch..." .
+
+# Create a test file to watch
+"Initial content" "test-watched-file.txt" write-file
+
+# Set up file watcher
+: file-changed-callback
+  "File was changed!" .
+  "test-watched-file.txt" read-file .
+;
+
+"test-watched-file.txt" [file-changed-callback] @file.watch 
+"file-watcher" set-local
+
+"File watcher started. Modify test-watched-file.txt to see changes..." .
+
+# Wait and modify the file
+3000 sleep
+"Modified content at " now + " test-watched-file.txt" write-file
+
+"Waiting for file change detection..." .
+2000 sleep
+
+# Test file polling
+: file-poll-callback
+  "File polling detected change!" .
+;
+
+"test-watched-file.txt" 1000 [file-poll-callback] @file.poll
+"file-poller" set-local
+
+"File poller started - will check every second..." .
+2000 sleep
+
+"Another modification" "test-watched-file.txt" write-file
+3000 sleep
+
+"File event tests complete!" .
+
+# Clean up test file
+"test-watched-file.txt" delete-file

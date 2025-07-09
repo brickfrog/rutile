@@ -1,0 +1,24 @@
+# Test agent crash recovery
+start-supervisor
+"Supervisor started for crash recovery test!" .
+
+# Spawn an agent that will crash
+["Agent starting..." print-top 1 2 3 + + print-top "About to crash..." print-top 5 0 / print-top "This should not be reached" print-top] spawn-agent "crash-agent" bind
+
+# Supervise the agent
+"crash-agent" get-local "permanent" "restart-always" supervise-agent .
+
+# Check initial status
+"crash-agent" get-local agent-info .
+
+# Wait a bit and check status again
+"Waiting for potential crash and restart..." .
+3 sleep
+
+# Check if agent was restarted
+"crash-agent" get-local agent-info .
+
+# Stop supervisor
+stop-supervisor
+
+"Agent crash recovery test complete!" .

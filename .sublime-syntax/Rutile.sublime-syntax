@@ -1,0 +1,105 @@
+%YAML 1.2
+---
+name: Rutile
+file_extensions:
+  - rtl
+scope: source.rutile
+
+contexts:
+  main:
+    - include: comments
+    - include: strings
+    - include: numbers
+    - include: word-definitions
+    - include: quotations
+    - include: maps
+    - include: builtin-words
+    - include: llm-words
+    - include: agent-words
+    - include: control-words
+    - include: stack-words
+    - include: math-words
+    - include: io-words
+    - include: webhook-sigils
+
+  comments:
+    - match: '#.*$'
+      scope: comment.line.number-sign.rutile
+    - match: '\('
+      scope: comment.block.rutile
+      push:
+        - meta_scope: comment.block.rutile
+        - match: '\)'
+          pop: true
+        - include: comments
+
+  strings:
+    - match: '"'
+      scope: punctuation.definition.string.begin.rutile
+      push:
+        - meta_scope: string.quoted.double.rutile
+        - match: '"'
+          scope: punctuation.definition.string.end.rutile
+          pop: true
+        - match: '\\.'
+          scope: constant.character.escape.rutile
+
+  numbers:
+    - match: '\b-?\d+(\.\d+)?\b'
+      scope: constant.numeric.rutile
+
+  word-definitions:
+    - match: '\b(:|;)\b'
+      scope: keyword.control.definition.rutile
+
+  quotations:
+    - match: '\['
+      scope: punctuation.definition.quotation.begin.rutile
+      push:
+        - meta_scope: meta.quotation.rutile
+        - match: '\]'
+          scope: punctuation.definition.quotation.end.rutile
+          pop: true
+        - include: main
+
+  maps:
+    - match: '\{'
+      scope: punctuation.definition.map.begin.rutile
+      push:
+        - meta_scope: meta.map.rutile
+        - match: '\}'
+          scope: punctuation.definition.map.end.rutile
+          pop: true
+        - include: main
+
+  builtin-words:
+    - match: '\b(dup|drop|swap|rot|over|pick|roll|depth|2dup|2drop|2swap|nip|tuck|3dup|3drop)\b'
+      scope: keyword.other.builtin.rutile
+
+  llm-words:
+    - match: '\b(llm-call|llm-default-config|llm-stream|llm-multi-turn)\b'
+      scope: keyword.other.llm.rutile
+
+  agent-words:
+    - match: '\b(spawn-agent|agent-send|agent-receive|agent-kill|agent-list|supervise-agent|start-supervisor|stop-supervisor|agent-info|agent-health)\b'
+      scope: keyword.other.agent.rutile
+
+  control-words:
+    - match: '\b(if|then|else|while|times|each|map|filter|fold|try|catch|throw|finally)\b'
+      scope: keyword.control.rutile
+
+  stack-words:
+    - match: '\b(print-top|clear-stack|show-words|show-stack)\b'
+      scope: keyword.other.stack.rutile
+
+  math-words:
+    - match: '\b(\+|\-|\*|/|=|<|>|<=|>=|!=|and|or|not|sin|cos|tan|log|exp|sqrt|pow|abs|min|max|random|pi|e)\b'
+      scope: keyword.other.math.rutile
+
+  io-words:
+    - match: '\b(read-file|write-file|append-file|file-exists\?|delete-file|read-line|write-line)\b'
+      scope: keyword.other.io.rutile
+
+  webhook-sigils:
+    - match: '@\w+'
+      scope: keyword.other.webhook.rutile
