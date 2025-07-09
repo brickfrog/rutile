@@ -1,0 +1,71 @@
+# Property-based testing examples for Rutile
+
+# Test that dup always creates two identical values
+: test-dup-property
+  -100 100 gen-integer [dup =] forall 100 quick-check
+;
+
+# Test that + is commutative
+: test-addition-commutative
+  -50 50 gen-integer [
+    dup 
+    -50 50 gen-integer sample 1 swap car
+    2dup + rot rot swap + =
+  ] forall 100 quick-check
+;
+
+# Test that string concatenation with empty string is identity
+: test-string-concat-identity
+  10 gen-string [
+    dup "" concat swap =
+  ] forall 50 quick-check
+;
+
+# Test that list length is always non-negative
+: test-list-length-positive
+  -10 10 gen-integer 5 gen-list [
+    length 0 >=
+  ] forall 100 quick-check
+;
+
+# Test that swap twice returns to original state
+: test-swap-twice
+  -100 100 gen-integer [
+    dup 1 2dup +
+    swap swap
+    = swap drop
+  ] forall 100 quick-check
+;
+
+# Test that drop removes exactly one element
+: test-drop-removes-one
+  1 10 gen-integer 5 gen-list [
+    dup length swap
+    42 swap cons
+    drop length
+    =
+  ] forall 50 quick-check
+;
+
+# Run all property tests
+"Running property-based tests..." print-top
+
+"Testing dup property..." print-top
+test-dup-property print-top
+
+"Testing addition commutativity..." print-top
+test-addition-commutative print-top
+
+"Testing string concatenation identity..." print-top
+test-string-concat-identity print-top
+
+"Testing list length positivity..." print-top
+test-list-length-positive print-top
+
+"Testing swap twice..." print-top
+test-swap-twice print-top
+
+"Testing drop removes one..." print-top
+test-drop-removes-one print-top
+
+"Property-based tests complete!" print-top

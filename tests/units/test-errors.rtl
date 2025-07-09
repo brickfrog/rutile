@@ -1,0 +1,11 @@
+# Test error handling
+: error-handler
+  "Error caught!" . 
+;
+
+: test-throw
+  "Test error" "test-type" throw
+;
+
+error-handler test-throw try
+"Error handling works!" .

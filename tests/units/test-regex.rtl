@@ -1,0 +1,9 @@
+# Test regex operations
+"hello world" "hello" regex-match .
+"hello world" "xyz" regex-match .
+"hello world" "world" "rutile" regex-replace .
+"one,two,three" "," regex-split .
+"abc123def456" "123" regex-find-all .
+"hello world" "world" regex-test .
+"hello world" "xyz" regex-test .
+"Regex operations work!" .

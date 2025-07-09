@@ -1,0 +1,20 @@
+# Test basic new features
+
+# Comparisons
+5 3 > .
+10 15 < .
+
+# Logic
+true false and .
+true false or .
+
+# Stack ops
+1 2 3 depth .
+
+# String ops
+"hello" " world" concat .
+"hello world" length .
+
+# Type checks
+42 number? .
+"test" string? .

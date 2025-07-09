@@ -1,0 +1,16 @@
+# Math utilities module
+
+: square  
+  dup * ;
+
+: cube
+  dup dup * * ;
+
+: factorial
+  dup 1 = [ drop 1 ] [ dup 1 - factorial * ] if ;
+
+: abs-diff
+  - abs ;
+
+# Export these functions for use by other modules
+["square" "cube" "factorial" "abs-diff"] "math-utils" { exports: ["square" "cube" "factorial" "abs-diff"] } module

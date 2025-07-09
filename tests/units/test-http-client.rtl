@@ -1,0 +1,3 @@
+# Test HTTP client
+[print-top print-top print-top] "https://httpbin.org/get" async-http-get
+"HTTP client test complete!" .

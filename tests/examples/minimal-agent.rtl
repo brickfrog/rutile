@@ -1,0 +1,7 @@
+# Minimal working agent test
+
+: simple-call
+  llm-default-config "What is AI?" llm-call print-top
+;
+
+simple-call

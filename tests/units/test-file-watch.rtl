@@ -1,0 +1,27 @@
+# Test file watching
+
+"Testing file watcher..." .
+
+# Create test file
+"initial content" "/tmp/rutile-test-file.txt" write-file
+
+: file-change-handler
+  "FILE CHANGED DETECTED!" .
+;
+
+# Start watching the file
+"/tmp/rutile-test-file.txt" [file-change-handler] @file.watch drop
+
+"File watcher started. Sleeping 2 seconds then modifying file..." .
+2000 sleep
+
+# Modify the file to trigger the watcher
+"modified content" "/tmp/rutile-test-file.txt" write-file
+
+"File modified. Waiting 2 seconds for detection..." .
+2000 sleep
+
+"Test complete!" .
+
+# Clean up
+"/tmp/rutile-test-file.txt" delete-file

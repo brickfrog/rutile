@@ -1,0 +1,51 @@
+# ULTIMATE AUTISM TEST - All features enabled
+
+# Test comments ( this is a comment )
+"Comments work!" .
+
+# Test file I/O
+"Hello from rutile!" "test-output.txt" write-file .
+"test-output.txt" file-exists? .
+"test-output.txt" read-file .
+
+# Test math operations
+pi 2 * .
+30 sin .
+45 cos .
+2 3 pow .
+-5 abs .
+3.7 floor .
+3.7 ceiling .
+1 10 random .
+
+# Test date/time
+now .
+time .
+date .
+
+# Test advanced list operations
+[1 2 3 4 5] [dup * dup *] map .
+[1 2 3 4 5] [0 + 1 +] map .
+
+# Test string operations with comments
+"hello" ( append world ) " world" concat .
+"a,b,c,d" "," split length .
+
+# Test conditionals with complex logic
+5 3 > ["bigger"] ["smaller"] if .
+true false or ["at least one true"] ["both false"] if .
+
+# Test nested operations
+[1 2 3] [dup 2 * swap 3 + max] map .
+
+# Test type predicates
+42 number? ["is number"] ["not number"] if .
+"test" string? ["is string"] ["not string"] if .
+
+# Test advanced stack operations
+1 2 3 4 5 depth . 
+1 2 3 4 5 2 pick .
+1 2 3 4 5 2 roll .
+
+# Clean up
+"test-output.txt" delete-file drop

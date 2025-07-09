@@ -1,0 +1,4 @@
+# Test reload change detection
+"test-hot-reload.rtl" watch-file
+reload-on-change
+"Checking for file changes..." .

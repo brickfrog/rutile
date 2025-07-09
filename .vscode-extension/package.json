@@ -1,0 +1,25 @@
+{
+  "name": "rutile-syntax",
+  "displayName": "Rutile Language Support",
+  "description": "Syntax highlighting for Rutile concatenative language",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "rutile",
+      "aliases": ["Rutile", "rutile"],
+      "extensions": [".rtl"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "rutile",
+      "scopeName": "source.rutile",
+      "path": "./syntaxes/rutile.tmLanguage.json"
+    }]
+  }
+}

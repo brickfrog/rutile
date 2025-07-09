@@ -1,0 +1,207 @@
+# AI Research Assistant - Comprehensive LLM Workflow Example
+# This example demonstrates a multi-stage research pipeline using multiple LLM calls
+# with different models, configurations, and advanced features
+
+# Global configuration for consistent behavior
+{temperature 0.3} llm-set-config
+
+# ============================================================================
+# Stage 1: Research Planning - High-level strategy
+# ============================================================================
+
+: plan-research ( topic -- research-plan )
+  "You are a research strategist. Given a research topic, create a detailed research plan with:
+1. Key research questions to investigate
+2. Primary sources to consult
+3. Potential subtopics to explore
+4. Expected challenges
+
+Be specific and actionable. Topic: " swap concat
+  {model "gpt-4o" temperature 0.5} llm-call
+;
+
+# ============================================================================
+# Stage 2: Information Gathering - Web search with analysis
+# ============================================================================
+
+: gather-information ( research-plan -- raw-research )
+  # Enable web search tools for information gathering
+  ["web_search"] llm-tools
+  
+  "Based on this research plan, conduct comprehensive research using web search.
+Focus on finding recent, credible sources and key insights. Gather factual information
+and note important statistics, dates, and expert opinions.
+
+Research Plan: " swap concat
+  {model "gpt-4o" temperature 0.2} llm-call
+;
+
+# ============================================================================
+# Stage 3: Content Analysis - Deep analysis with reasoning
+# ============================================================================
+
+: analyze-findings ( raw-research -- analysis )
+  "gpt-4o" llm-with-model
+  
+  "You are a research analyst. Analyze the following research data and provide:
+1. Key themes and patterns
+2. Most significant findings
+3. Areas of consensus vs. disagreement
+4. Quality assessment of sources
+5. Gaps in the research
+
+Be critical and thorough. Research Data: " swap concat
+  llm-reasoning  # Use reasoning mode for deep analysis
+;
+
+# ============================================================================
+# Stage 4: Fact Checking - Verification with conservative model
+# ============================================================================
+
+: fact-check ( analysis -- verified-analysis )
+  "You are a fact-checker. Review this analysis for accuracy, noting:
+1. Any claims that need verification
+2. Potential biases or overgeneralizations
+3. Missing context or nuance
+4. Reliability assessment
+
+Be skeptical and thorough. Analysis: " swap concat
+  {model "gpt-4o-mini" temperature 0.1} llm-call
+;
+
+# ============================================================================
+# Stage 5: Synthesis - Create structured output
+# ============================================================================
+
+: synthesize-report ( verified-analysis -- final-report )
+  "Create a well-structured research report from this verified analysis:
+
+## Executive Summary
+[Brief overview of key findings]
+
+## Main Findings
+[Detailed findings organized by importance]
+
+## Supporting Evidence
+[Key data points and sources]
+
+## Limitations and Caveats
+[Acknowledged uncertainties]
+
+## Recommendations
+[Actionable next steps]
+
+Use clear, professional language. Verified Analysis: " swap concat
+  {model "gpt-4o" temperature 0.4} llm-call
+;
+
+# ============================================================================
+# Stage 6: Multi-turn Follow-up - Interactive refinement
+# ============================================================================
+
+: ask-followup ( report question -- enhanced-report )
+  swap  # Stack: question report
+  "Based on this research report, please answer this follow-up question and 
+integrate the answer into an enhanced version of the report.
+
+Original Report: " swap concat
+  "\n\nFollow-up Question: " rot concat concat
+  {model "gpt-4o" temperature 0.3} llm-call
+;
+
+# ============================================================================
+# Main Research Pipeline - Orchestrates the entire workflow
+# ============================================================================
+
+: research-pipeline ( topic -- comprehensive-report )
+  dup "=== Starting research on: " swap concat print
+  
+  # Stage 1: Planning
+  "Planning research..." print
+  plan-research
+  
+  # Stage 2: Information gathering  
+  "Gathering information..." print
+  gather-information
+  
+  # Stage 3: Analysis
+  "Analyzing findings..." print
+  analyze-findings
+  
+  # Stage 4: Fact checking
+  "Fact-checking analysis..." print
+  fact-check
+  
+  # Stage 5: Synthesis
+  "Synthesizing final report..." print
+  synthesize-report
+  
+  "=== Research pipeline completed ===" print
+;
+
+# ============================================================================
+# Advanced Pipeline with Error Handling
+# ============================================================================
+
+: safe-research-pipeline ( topic -- report-or-error )
+  # Set up error handling
+  {
+    # Try the main pipeline
+    research-pipeline
+  } {
+    # Error handler
+    "ERROR: Research pipeline failed - " swap concat
+    print
+    "Partial results may be available in previous stages." print
+    "N/A - Pipeline Error" 
+  } try-catch
+;
+
+# ============================================================================
+# Interactive Research Session - Multi-turn conversation
+# ============================================================================
+
+: interactive-research ( topic -- final-report )
+  # Initial research
+  research-pipeline
+  
+  # Follow-up questions  
+  dup "What are the main limitations of this research?" ask-followup
+  dup "What would be the next logical research steps?" ask-followup
+  "How confident are we in the main conclusions?" ask-followup
+;
+
+# ============================================================================
+# Example Usage and Test Cases
+# ============================================================================
+
+# Test 1: Basic research pipeline
+"Impact of artificial intelligence on software development productivity" 
+research-pipeline print
+
+print "========================================" print
+
+# Test 2: Interactive research with follow-ups
+"Quantum computing applications in cryptography"
+interactive-research print
+
+print "========================================" print
+
+# Test 3: Safe pipeline with error handling
+"Future of renewable energy storage technologies"
+safe-research-pipeline print
+
+print "========================================" print
+
+# Test 4: Custom configuration research
+{temperature 0.7} llm-set-config
+"Social media impact on political polarization"
+research-pipeline print
+
+print "========================================" print
+
+# Test 5: Reasoning-heavy analysis
+"gpt-4o" llm-set-model
+["web_search" "code_interpreter"] llm-tools
+"Machine learning bias in healthcare algorithms"
+research-pipeline print

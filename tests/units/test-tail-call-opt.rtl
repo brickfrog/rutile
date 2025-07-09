@@ -1,0 +1,8 @@
+# Test tail call optimization
+
+"Testing tail call optimization..." .
+
+# Test recursive function that should be optimized
+[: factorial dup 1 > if dup 1 - factorial * else drop 1 then ;] optimize-tail-calls
+"Original factorial definition:" .
+"Tail-call optimized:" . .

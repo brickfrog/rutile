@@ -1,0 +1,37 @@
+# FULL AUTISM MODE - Complete Joy/Forth test
+
+# Test comparisons
+5 3 > .
+10 15 < .
+5 5 = .
+
+# Test logic
+true false and .
+true false or .
+false not .
+
+# Test conditionals
+5 0 > [1 2 3] [4 5 6] if .
+
+# Test advanced stack operations
+1 2 3 depth .
+1 2 3 2dup . . . . .
+1 2 3 4 2drop . .
+
+# Test string operations
+"hello" " world" concat .
+"hello world" length .
+"a,b,c" "," split .
+
+# Test type predicates
+42 number? .
+"hello" string? .
+true boolean? .
+
+# Test list operations
+1 2 3 4 5 [dup *] map .
+1 2 3 4 5 [2 >] filter .
+1 2 3 4 5 0 [+] fold .
+
+# Test loops
+3 [dup . 1 +] times drop

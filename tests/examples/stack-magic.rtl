@@ -1,0 +1,40 @@
+# Stack Magic - Shows elegant LLM chaining impossible in Python
+# Demonstrates pure stack-based LLM orchestration
+
+: analyze-then-counter ( topic -- counter-analysis )
+  # Step 1: Get initial analysis
+  "Provide arguments supporting: " swap concat
+  llm-default-config swap llm-call
+  
+  # Step 2: Counter the analysis (uses result from step 1)
+  "Counter these arguments: " swap concat  
+  llm-default-config swap llm-call
+;
+
+: triple-perspective ( topic -- synthesis )
+  # Technical perspective
+  "Technical view: " over concat
+  llm-default-config swap llm-call
+  
+  # Business perspective  
+  "Business view: " rot concat
+  llm-default-config swap llm-call
+  
+  # Social perspective
+  "Social view: " rot concat  
+  llm-default-config swap llm-call
+  
+  # Synthesize all three (stack has: tech business social)
+  "Synthesize these views: TECH: " swap concat
+  " | BIZ: " rot concat concat
+  " | SOCIAL: " rot concat concat
+  llm-default-config swap llm-call
+;
+
+# Demo 1: Argument and counter-argument
+"AI should replace human workers" analyze-then-counter print-top
+
+"================================" print-top
+
+# Demo 2: Triple perspective synthesis  
+"universal basic income" triple-perspective print-top

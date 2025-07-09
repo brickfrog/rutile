@@ -1,0 +1,2 @@
+# Test empty list directly
+[] null? .

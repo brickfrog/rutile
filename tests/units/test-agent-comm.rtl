@@ -1,0 +1,5 @@
+# Test agent communication
+[+ 1 2 3] spawn-agent "agent" bind
+"agent" get-local "Hello from main!" agent-send .
+"agent" get-local agent-kill .
+"Agent communication test complete!" .

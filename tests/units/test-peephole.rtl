@@ -1,0 +1,11 @@
+# Test peephole optimizations
+"Dup-drop elimination:" .
+[42 dup drop] compile show-bytecode
+[42 dup drop] compile optimize show-bytecode
+
+"Zero addition elimination:" .  
+[100 0 +] compile show-bytecode
+[100 0 +] compile optimize show-bytecode
+
+"Final result:" .
+[100 0 +] compile optimize bytecode-exec .

@@ -1,0 +1,18 @@
+# Working hot reload test
+
+"Setting up hot reload for /tmp/hot-reload-test.rtl..." .
+
+# Enable hot reload for the test file
+"/tmp/hot-reload-test.rtl" hot-reload-enable
+
+"Hot reload enabled! File will be monitored for changes." .
+
+# Check status
+"Current watched files:" .
+hot-reload-status .
+
+# Load the file manually to test
+"Loading file manually..." .
+"/tmp/hot-reload-test.rtl" hot-reload-manual
+
+"Hot reload test complete!" .

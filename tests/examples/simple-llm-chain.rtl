@@ -1,0 +1,151 @@
+# Simple LLM Chain Demo - Basic Multi-step LLM Processing
+# A simple, testable example of chaining multiple LLM calls
+
+# ============================================================================
+# Basic Configuration
+# ============================================================================
+
+# Set conservative defaults for reliable testing
+{temperature 0.3 max_tokens 300} llm-set-config
+
+# ============================================================================
+# Simple Chaining Patterns
+# ============================================================================
+
+: translate-and-summarize ( text target-language -- summary )
+  # Step 1: Translate the text
+  "Translate this text to " swap concat ": " concat swap concat
+  {temperature 0.2} llm-call
+  
+  # Step 2: Summarize the translation
+  "Summarize this text in 2-3 sentences: " swap concat
+  {temperature 0.3} llm-call
+;
+
+: analyze-and-improve ( text -- improved-text )
+  # Step 1: Analyze the text
+  "Analyze this text for clarity, tone, and effectiveness: " swap concat
+  llm-call
+  
+  # Step 2: Improve based on analysis
+  "Based on this analysis, rewrite the original text to be more effective: " swap concat
+  {temperature 0.5} llm-call
+;
+
+: question-answer-followup ( topic -- comprehensive-answer )
+  # Step 1: Generate initial answer
+  "Explain " swap concat " in simple terms"
+  llm-call
+  
+  # Step 2: Generate follow-up question
+  dup "Based on this explanation, what would be a good follow-up question? " swap concat
+  {temperature 0.4} llm-call
+  
+  # Step 3: Answer the follow-up
+  "Answer this follow-up question: " swap concat
+  llm-call
+;
+
+# ============================================================================
+# Model Switching Demo
+# ============================================================================
+
+: compare-models ( prompt -- comparison )
+  # Response from fast model
+  "gpt-4o-mini" llm-with-model
+  dup llm-call
+  "=== Fast Model Response ===" print
+  dup print
+  
+  # Response from standard model  
+  "gpt-4o" llm-with-model
+  llm-call
+  "=== Standard Model Response ===" print
+  print
+;
+
+# ============================================================================
+# Sequential Processing Pipeline
+# ============================================================================
+
+: content-pipeline ( raw-idea -- polished-content )
+  # Step 1: Expand the idea
+  "Expand this idea into a full paragraph: " swap concat
+  {temperature 0.6} llm-call
+  
+  # Step 2: Add structure
+  "Add clear structure with headers and bullet points: " swap concat
+  {temperature 0.4} llm-call
+  
+  # Step 3: Professional polish
+  "Polish this content for professional presentation: " swap concat
+  {temperature 0.3} llm-call
+;
+
+# ============================================================================
+# Configuration Chain Demo
+# ============================================================================
+
+: creative-to-analytical ( topic -- creative-then-analytical )
+  # Creative phase
+  {temperature 0.8} llm-set-config
+  "Write a creative introduction about " swap concat
+  llm-call
+  
+  # Analytical phase
+  {temperature 0.1} llm-set-config  
+  "Now provide a detailed analytical breakdown of " rot concat
+  llm-call
+;
+
+# ============================================================================
+# Simple Processing Chain
+# ============================================================================
+
+: simple-processing ( input -- result )
+  "Process and improve this input: " swap concat
+  llm-call
+;
+
+# ============================================================================
+# Simple Test Cases
+# ============================================================================
+
+print "=== Simple LLM Chain Demo ===" print
+
+# Test 1: Translation and summarization
+"The quick brown fox jumps over the lazy dog. This sentence contains every letter of the alphabet."
+"Spanish" translate-and-summarize print
+
+print "----------------------------------------" print
+
+# Test 2: Analysis and improvement
+"Our company makes good products that people like."
+analyze-and-improve print
+
+print "----------------------------------------" print
+
+# Test 3: Question-answer-followup
+"machine learning" question-answer-followup print
+
+print "----------------------------------------" print
+
+# Test 4: Model comparison
+"Explain quantum physics" compare-models
+
+print "----------------------------------------" print
+
+# Test 5: Content pipeline
+"sustainable energy solutions" content-pipeline print
+
+print "----------------------------------------" print
+
+# Test 6: Creative to analytical
+"artificial intelligence" creative-to-analytical print
+
+print "----------------------------------------" print
+
+# Test 7: Simple processing
+"blockchain technology" simple-processing print
+
+print "=== Demo Completed ===" print

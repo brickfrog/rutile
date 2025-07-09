@@ -1,0 +1,32 @@
+{
+  "name": "tree-sitter-rutile",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for Rutile",
+  "main": "bindings/node",
+  "keywords": [
+    "tree-sitter",
+    "rutile",
+    "concatenative",
+    "parser"
+  ],
+  "author": "Rutile Team",
+  "license": "MIT",
+  "dependencies": {
+    "nan": "^2.15.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.20.0"
+  },
+  "scripts": {
+    "build": "tree-sitter generate",
+    "test": "tree-sitter test"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.rutile",
+      "file-types": [
+        "rtl"
+      ]
+    }
+  ]
+}

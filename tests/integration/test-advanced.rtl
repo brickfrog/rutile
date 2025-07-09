@@ -1,0 +1,36 @@
+# ADVANCED TESTS - Complex operations and edge cases
+# Test nested combinators
+# [[1 2] [3 4]] [length] map [2 2] = assert
+# [1 2 3] [[dup *] map] [map] dip [[1 4 9]] = assert
+
+# Test complex conditionals
+5 dup 3 > [2 *] [3 +] if 10 = assert
+2 dup 3 > [2 *] [3 +] if 5 = assert
+
+# Test loops and iteration
+0 5 [1 +] times 5 = assert
+
+# Test string edge cases
+"" length 0 = assert
+"hello" 0 2 substr "he" = assert
+"" "" concat "" = assert
+
+# Test list edge cases
+[] null? assert
+[] length 0 = assert
+[1] car 1 = assert
+[1 2 3] cdr [2 3] = assert
+
+# Test stack edge cases
+1 2 3 3drop depth 0 = assert
+1 2 3dup 3 = assert
+1 2 2dup 2 = assert
+
+# Test type edge cases
+[] empty? assert
+"" empty? assert
+
+# Test complex expressions
+[1 2 3] [dup 2 * swap 3 + max] map [3 4 6] = assert
+
+"All advanced tests passed!" .

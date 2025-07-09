@@ -1,0 +1,7 @@
+# test-project - A Rutile Project
+
+: greet
+  "Hello from test-project!" .
+;
+
+greet

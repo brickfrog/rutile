@@ -1,0 +1,3 @@
+# Test simple HTTP
+[drop drop drop] "test-url" async-http-get
+"HTTP test done!" .

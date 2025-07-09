@@ -1,0 +1,174 @@
+# Rutile Syntax Highlighting Example
+# This file demonstrates all the syntax features for highlighting
+
+# Comments
+( This is a block comment
+  that spans multiple lines )
+
+# Word definitions
+: greet
+  "Hello, " swap concat print-top
+;
+
+: factorial
+  dup 1 <= [drop 1] [dup 1 - factorial *] if
+;
+
+# Numbers and basic operations
+42 3.14159 -17 0.5
+1 2 + 3 4 * 5 6 - 7 8 /
+
+# Stack operations
+1 2 3 dup drop swap rot over
+pick roll depth 2dup 2drop 2swap
+nip tuck 3dup 3drop
+
+# Comparisons and logic
+1 2 = 3 4 < 5 6 > 7 8 <= 9 10 >= 11 12 !=
+true false and or not
+
+# Strings
+"Hello, world!" "Escaped \"quotes\" and \\backslashes"
+"Multi-line\nstring with\ttabs"
+
+# String operations
+"Hello" " World" concat
+"one,two,three" "," split
+"Hello World" length
+"Hello World" 0 5 substr
+
+# Quotations (code blocks)
+[1 2 3 4 5]
+[dup *]
+[print-top]
+
+# Maps
+{name "John" age 30}
+{temperature 0.7 model "gpt-4"}
+
+# Combinators
+[1 2 3 4 5] [2 *] map
+[1 2 3 4 5] [even?] filter
+[1 2 3 4 5] 0 [+] fold
+
+# Control flow
+condition [then-branch] [else-branch] if
+5 [i print-top] times
+[condition] [body] while
+
+# Math functions
+3.14159 sin 45 cos 30 tan
+2.71828 log 10 log10 2 exp
+16 sqrt 2 8 pow -5 abs
+3.7 floor 3.2 ceiling 3.5 round
+10 20 min 30 40 max
+random pi e
+
+# I/O operations
+"test.txt" read-file
+"Hello" "output.txt" write-file
+"More text" "output.txt" append-file
+"input.txt" file-exists?
+"temp.txt" delete-file
+read-line write-line
+
+# LLM integration
+"What is the weather?" {temperature 0.7} llm-call
+llm-default-config "Hello" swap llm-stream
+"Continue conversation" {model "gpt-4"} "prev-123" llm-multi-turn
+
+# Agent management
+[+ 1 2 3] spawn-agent "worker" bind
+agent-list
+"worker" get-local "Hello agent" agent-send
+"worker" get-local agent-kill
+
+# Supervisor tree
+start-supervisor
+"worker" get-local "permanent" "restart-always" supervise-agent
+"worker" get-local agent-info
+"worker" get-local agent-health
+stop-supervisor
+
+# Error handling
+["risky-operation"] [error-handler] try
+error-obj catch
+"Custom error" "user-error" throw
+["main-code"] ["cleanup-code"] finally
+
+# Variable binding
+[("x" 42) ("y" 13)] ["x" get-local "y" get-local +] let
+"result" 100 bind
+"result" get-local
+"result" unbind
+
+# JSON operations
+{name "John" age 30} json-encode
+"{\"name\":\"John\"}" json-decode
+json-obj "name" json-get
+json-obj "age" 31 json-set
+json-obj json-keys
+
+# Cryptographic functions
+"hello world" sha256
+"secret data" md5
+"encode me" base64-encode
+"ZW5jb2RlIG1l" base64-decode
+uuid
+
+# Regular expressions
+"hello world" "w+" regex-match
+"hello world" "o" "0" regex-replace
+"a,b,c" "," regex-split
+"hello world" "l" regex-find-all
+"hello123" "\\d+" regex-test
+
+# HTTP operations
+"https://api.example.com/data" http-get
+"https://api.example.com/data" {key "value"} http-post
+"https://api.example.com/data" [callback] async-http-get
+
+# Webhooks
+@webhook.listen [request-handler] "http://localhost:8080/hook"
+"/api/data" [handler-function] webhook-handler
+webhook-stop
+
+# Hot reload
+"script.rtl" hot-reload
+"script.rtl" watch-file
+true auto-reload
+reload-on-change
+
+# Stack debugging
+print-top clear-stack show-words show-stack
+
+# Testing
+true assert
+test-passed
+test-failed
+
+# Type checking
+42 number? "hello" string? true boolean?
+[1 2 3] list? null null? [] empty?
+
+# List operations
+1 [2 3] cons
+[1 2 3] car
+[1 2 3] cdr
+
+# Time operations
+now time date timestamp
+5 sleep
+
+# Example usage combining multiple features
+: fibonacci
+  dup 2 < [1] [dup 1 - fibonacci swap 2 - fibonacci +] if
+;
+
+: # weather-agent
+  start-supervisor
+  ["What's the weather in Tokyo?" {temperature 0.3 model "gpt-4"} llm-call print-top] spawn-agent "weather-bot" bind
+  "weather-bot" get-local "permanent" "restart-always" supervise-agent
+;
+
+# weather-agent

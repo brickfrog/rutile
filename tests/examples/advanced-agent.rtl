@@ -1,0 +1,141 @@
+# Advanced Agent Demo - Multiple LLM Workflow Patterns
+
+# ============================================================================
+# Core Agent Functions
+# ============================================================================
+
+: simple-llm ( prompt -- response )
+  llm-default-config swap llm-call
+;
+
+: analytical-llm ( prompt -- response )
+  {temperature 0.1} swap llm-call
+;
+
+: creative-llm ( prompt -- response )
+  {temperature 0.8} swap llm-call
+;
+
+# ============================================================================
+# Multi-Step Analysis Pipeline
+# ============================================================================
+
+: research-topic ( topic -- research-summary )
+  "Research and summarize key information about: " swap concat
+  analytical-llm
+;
+
+: generate-ideas ( topic -- creative-ideas )
+  "Generate 5 creative ideas related to: " swap concat
+  creative-llm
+;
+
+: evaluate-ideas ( ideas -- evaluation )
+  "Evaluate these ideas for feasibility and impact: " swap concat
+  analytical-llm
+;
+
+: create-action-plan ( evaluation -- action-plan )
+  "Create a practical action plan based on: " swap concat
+  simple-llm
+;
+
+# ============================================================================
+# Complete Research Workflow
+# ============================================================================
+
+: full-research-pipeline ( topic -- final-plan )
+  "Starting research pipeline for: " over concat print-top
+  
+  # Stage 1: Research
+  "=== Research Phase ===" print-top
+  dup research-topic
+  dup print-top
+  
+  # Stage 2: Ideation
+  "=== Ideation Phase ===" print-top
+  over generate-ideas
+  dup print-top
+  
+  # Stage 3: Evaluation
+  "=== Evaluation Phase ===" print-top
+  evaluate-ideas
+  dup print-top
+  
+  # Stage 4: Planning
+  "=== Planning Phase ===" print-top
+  create-action-plan
+  
+  "=== Pipeline Complete ===" print-top
+;
+
+# ============================================================================
+# Question-Answer Chain
+# ============================================================================
+
+: ask-followup ( answer question -- enhanced-answer )
+  "Given this information: " swap concat
+  "\n\nAnswer this follow-up question: " rot concat concat
+  simple-llm
+;
+
+: deep-dive ( topic -- comprehensive-analysis )
+  # Initial question
+  "Explain " swap concat " in detail"
+  simple-llm
+  
+  # Follow-up questions
+  dup "What are the main challenges?" ask-followup
+  dup "What are the future trends?" ask-followup
+  "What should beginners know?" ask-followup
+;
+
+# ============================================================================
+# Model Comparison Demo
+# ============================================================================
+
+: compare-approaches ( problem -- comparison )
+  "Problem: " swap concat
+  
+  # Analytical approach
+  "=== Analytical Approach ===" print-top
+  dup " - Analyze systematically:" concat analytical-llm
+  dup print-top
+  
+  # Creative approach
+  "=== Creative Approach ===" print-top
+  " - Think outside the box:" concat creative-llm
+  print-top
+;
+
+# ============================================================================
+# Demo Scenarios
+# ============================================================================
+
+"Running Advanced Agent Demo..." print-top
+"========================================" print-top
+
+# Demo 1: Research Pipeline
+"sustainable urban transportation" full-research-pipeline print-top
+
+"========================================" print-top
+
+# Demo 2: Deep Dive Analysis
+"quantum computing" deep-dive print-top
+
+"========================================" print-top
+
+# Demo 3: Model Comparison
+"How to reduce plastic waste in cities" compare-approaches
+
+"========================================" print-top
+
+# Demo 4: Sequential Processing Chain
+"artificial intelligence ethics" research-topic
+"Create educational content about: " swap concat creative-llm
+"Make this accessible to high school students: " swap concat simple-llm
+print-top
+
+"========================================" print-top
+
+"Advanced Agent Demo Complete!" print-top

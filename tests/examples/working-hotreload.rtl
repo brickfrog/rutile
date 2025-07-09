@@ -1,0 +1,25 @@
+# Hot-Reload LLM Demo - Actually shows runtime modification
+
+: agent-v1 ( prompt -- response )
+  "V1 Agent (analytical): " swap concat
+  llm-default-config swap llm-call
+;
+
+: test-agent ( -- )
+  "Explain artificial intelligence" agent-v1 print-top
+;
+
+# Test version 1
+"Testing V1 agent..." print-top
+test-agent
+
+# Now create V2 and hot-reload it
+": agent-v1 ( prompt -- response )
+  \"V2 Agent (creative): \" swap concat
+  llm-default-config swap llm-call
+;" "/tmp/agent-v2.rtl" write-file
+
+"/tmp/agent-v2.rtl" hot-reload-enable
+
+"Agent upgraded! Testing V2..." print-top
+test-agent

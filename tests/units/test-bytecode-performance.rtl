@@ -1,0 +1,34 @@
+# Test bytecode performance and optimization
+
+# Test 1: Simple arithmetic - show bytecode and result
+2 3 + .
+
+# Same operation compiled to bytecode
+[2 3 +] compile show-bytecode
+[2 3 +] compile bytecode-exec .
+
+# Test 2: Constant folding optimization  
+[10 20 *] compile
+dup show-bytecode   # Show unoptimized
+optimize show-bytecode   # Show optimized (should be single literal)
+
+# Test 3: More complex expression
+[1 2 + 3 4 + *] compile
+dup show-bytecode
+optimize 
+dup show-bytecode
+bytecode-exec .
+
+# Test 4: Stack manipulation
+[5 dup dup * swap drop] compile show-bytecode bytecode-exec .
+
+# Test 5: Peephole optimization test (dup drop should be eliminated)
+[42 dup drop] compile
+dup show-bytecode
+optimize show-bytecode
+
+# Test 6: Zero addition elimination  
+[100 0 +] compile
+dup show-bytecode
+optimize show-bytecode
+bytecode-exec .
