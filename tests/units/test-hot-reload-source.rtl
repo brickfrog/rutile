@@ -1,9 +1,0 @@
-# Hot reload test source file
-
-: greet
-  "Hello from hot reload!" .
-;
-
-: version
-  "v1.0" .
-;

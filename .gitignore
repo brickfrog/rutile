@@ -50,3 +50,8 @@ __pycache__/
 # Backup files
 *.bak
 *.backup
+
+# Workforce Assistant
+.agent-notes/
+.workspace/
+.serena/

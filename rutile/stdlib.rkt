@@ -30,5 +30,8 @@
   (vm-define-word vm "json.stringify" '(json-stringify))
   
   ;; LLM words (placeholder)
-  (vm-define-word vm "llm.call" '(llm-call))
-  (vm-define-word vm "llm.default_cfg" '(llm-default-config)))
+  (vm-define-word vm "claude.call" '(claude-call))
+  (vm-define-word vm "agent.spawn" '(spawn-claude-agent))
+  (vm-define-word vm "agent.send" '(agent-send))
+  (vm-define-word vm "agent.kill" '(agent-kill))
+  (vm-define-word vm "agent.list" '(agent-list)))

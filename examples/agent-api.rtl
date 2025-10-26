@@ -1,0 +1,39 @@
+# Agent-Backed HTTP API
+# Demonstrates using Claude agents to handle HTTP requests
+# NOTE: Requires HTTP server functionality (future implementation)
+
+# This is a conceptual example showing how agent-backed APIs would work
+
+# Spawn specialized service agents
+: setup-service-agents
+  "You are a code assistant. Help with programming questions concisely." "code-agent" spawn-claude-agent drop
+  "You are a general assistant. Answer general questions helpfully." "general-agent" spawn-claude-agent drop
+  "You are a research assistant. Provide well-researched answers." "research-agent" spawn-claude-agent drop
+  "Service agents initialized" .
+;
+
+# Route request to appropriate agent
+# For demo, we'll just use the general-agent for all queries
+: handle-api-request ( query agent-name -- response )
+  agent-send
+;
+
+# Example workflow (simulated API calls)
+: run-api-demo
+  setup-service-agents
+
+  "=== API Demo ===" .
+
+  "Query: How do I write a Python function?" .
+  "How do I write a Python function?" "code-agent" handle-api-request .
+  "" .
+
+  "Query: What is the capital of France?" .
+  "What is the capital of France?" "general-agent" handle-api-request .
+  "" .
+
+  "Query: Explain quantum computing briefly" .
+  "Explain quantum computing briefly" "research-agent" handle-api-request .
+;
+
+run-api-demo

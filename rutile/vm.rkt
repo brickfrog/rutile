@@ -10,7 +10,7 @@
 (require "parser.rkt")
 (require "enhanced-parser.rkt")
 (require "errors.rkt")
-(require "llm.rkt")
+(require "claude.rkt")
 (require "concurrency.rkt")  
 (require "webhooks.rkt")
 (require "events.rkt")
@@ -28,7 +28,7 @@
          vm-stack
          vm-words
          vm-return-stack
-         vm-llm-context
+         vm-claude-context
          vm-push
          vm-pop
          vm-peek
@@ -44,10 +44,10 @@
          vm-set-source-context
          execute-tokens-with-positions)
 
-(struct vm (stack return-stack words locals error-handlers llm-context current-file current-source) #:mutable)
+(struct vm (stack return-stack words locals error-handlers claude-context current-file current-source) #:mutable)
 
 (define (make-vm)
-  (vm '() '() (make-hash) (make-hash) '() (make-llm-context) #f #f))
+  (vm '() '() (make-hash) (make-hash) '() (make-claude-context) #f #f))
 
 (define (vm-push vm val)
   (set-vm-stack! vm (cons val (vm-stack vm))))
@@ -116,7 +116,7 @@
 
 (define (builtin-word? name)
   (or (core-builtin? name)
-      (llm-builtin? name)
+      (claude-builtin? name)
       (concurrency-builtin? name)
       (webhook-builtin? name)
       (event-source-builtin? name)
@@ -131,7 +131,7 @@
                  "true" "false"
                  "pick" "roll" "depth" "2dup" "2drop" "2swap"
                  "nip" "tuck" "3dup" "3drop"
-                 "concat" "split" "length" "substr" "string?" "number?" "boolean?"
+                 "concat" "split" "join" "lines" "fmt" "length" "substr" "string?" "number?" "boolean?"
                  "list?" "null?" "empty?" "cons" "car" "cdr"
                  "map" "filter" "fold" "each" "times" "while"
                  "read-file" "write-file" "append-file" "file-exists?" "delete-file"
@@ -157,7 +157,7 @@
 (define (execute-builtin vm name)
   (cond
     [(core-builtin? name) (execute-core-builtin vm name)]
-    [(llm-builtin? name) (execute-llm-builtin vm name vm-pop vm-push vm-stack vm-llm-context)]
+    [(claude-builtin? name) (execute-claude-builtin vm name vm-pop vm-push vm-stack vm-claude-context)]
     [(concurrency-builtin? name) (execute-concurrency-builtin vm name vm-pop vm-push)]
     [(webhook-builtin? name) (execute-webhook-builtin vm name vm-pop vm-push)]
     [(event-source-builtin? name) (execute-event-source-builtin vm name vm-pop vm-push execute-tokens)]
@@ -335,6 +335,27 @@
      (define delimiter (vm-pop vm))
      (define str (vm-pop vm))
      (vm-push vm (string-split str delimiter))]
+    ["join"
+     (define separator (vm-pop vm))
+     (define lst (vm-pop vm))
+     (vm-push vm (string-join (map (lambda (x) (format "~a" x)) lst) separator))]
+    ["lines"
+     (define lst (vm-pop vm))
+     (vm-push vm (string-join (map (lambda (x) (format "~a" x)) lst) "\n"))]
+    ["fmt"
+     ;; Format string with args: "template %s and %s" arg1 arg2 2 fmt
+     (define count (vm-pop vm))
+     (define args (reverse (for/list ([i count]) (vm-pop vm))))
+     (define template (vm-pop vm))
+     (define result
+       (let loop ([template template] [args args])
+         (cond
+           [(null? args) template]
+           [(string-contains? template "%s")
+            (loop (regexp-replace #rx"%s" template (format "~a" (car args)))
+                  (cdr args))]
+           [else template])))
+     (vm-push vm result)]
     ["length"
      (define val (vm-pop vm))
      (cond

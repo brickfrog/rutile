@@ -1,4 +1,0 @@
-# Simple supervisor test
-"Testing supervisor builtin..." print-top
-spawn-agent "test-agent" bind
-"test-agent" get-local agent-info print-top

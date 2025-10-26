@@ -1,3 +1,0 @@
-# Test HTTP server
-8080 http-server .
-"HTTP server started on port 8080"

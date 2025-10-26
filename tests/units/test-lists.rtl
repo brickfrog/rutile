@@ -1,6 +1,0 @@
-# Test list parsing
-
-[1 2 3] .
-[4 5 6] [dup *] map .
-[] empty? .
-[1 2 3 4 5] [2 >] filter .

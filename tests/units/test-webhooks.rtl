@@ -1,8 +1,0 @@
-# Test webhook functionality
-: webhook-handler
-  "📨 Webhook received!" .
-;
-
-"/webhook" webhook-handler webhook-handler
-8080 webhook-server .
-"Webhook server started!" .

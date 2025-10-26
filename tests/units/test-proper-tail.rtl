@@ -1,8 +1,0 @@
-# Test tail call optimization with proper tail recursion
-
-"Testing tail call optimization..." .
-
-# This would be tail-recursive if the recursive call is the last operation
-[: countdown dup 0 > if dup . 1 - countdown else drop then ;] optimize-tail-calls
-"Original countdown:" .
-"Tail-call optimized:" . .

@@ -1,7 +1,0 @@
-"Basic stack test..." .
-42 .
-"Stack works!" .
-
-# Test if events module loads
-"Testing events..." .
-timer-list .

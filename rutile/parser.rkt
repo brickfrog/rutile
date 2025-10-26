@@ -21,40 +21,86 @@
   (define result '())
   (define current-token "")
   (define in-string? #f)
-  
-  (for ([char (string->list input)])
-    (cond
-      [(char=? char #\")
-       (if in-string?
-           (begin
-             (set! current-token (string-append current-token "\""))
-             (set! result (cons current-token result))
-             (set! current-token "")
-             (set! in-string? #f))
-           (begin
-             (when (not (string=? current-token ""))
+  (define in-multiline? #f)
+  (define chars (string->list input))
+
+  (let loop ([chars chars])
+    (when (not (null? chars))
+      (define char (car chars))
+      (define rest (cdr chars))
+
+      (cond
+        ;; Check for triple-quote start/end
+        [(and (char=? char #\")
+              (>= (length chars) 3)
+              (char=? (list-ref chars 1) #\")
+              (char=? (list-ref chars 2) #\"))
+         (if in-multiline?
+             ;; End multiline
+             (begin
+               (set! current-token (string-append current-token "\"\"\""))
                (set! result (cons current-token result))
-               (set! current-token ""))
-             (set! current-token "\"")
-             (set! in-string? #t)))]
-      [in-string?
-       (set! current-token (string-append current-token (string char)))]
-      [(or (char=? char #\[) (char=? char #\]) (char=? char #\{) (char=? char #\}))
-       ;; Brackets and braces are individual tokens
-       (when (not (string=? current-token ""))
-         (set! result (cons current-token result))
-         (set! current-token ""))
-       (set! result (cons (string char) result))]
-      [(char-whitespace? char)
-       (when (not (string=? current-token ""))
-         (set! result (cons current-token result))
-         (set! current-token ""))]
-      [else
-       (set! current-token (string-append current-token (string char)))]))
-  
+               (set! current-token "")
+               (set! in-multiline? #f)
+               (loop (cdddr chars)))
+             ;; Start multiline
+             (begin
+               (when (not (string=? current-token ""))
+                 (set! result (cons current-token result))
+                 (set! current-token ""))
+               (set! current-token "\"\"\"")
+               (set! in-multiline? #t)
+               (loop (cdddr chars))))]
+
+        ;; Regular quote (not triple)
+        [(char=? char #\")
+         (if (and (not in-multiline?) in-string?)
+             (begin
+               (set! current-token (string-append current-token "\""))
+               (set! result (cons current-token result))
+               (set! current-token "")
+               (set! in-string? #f)
+               (loop rest))
+             (if (not in-multiline?)
+                 (begin
+                   (when (not (string=? current-token ""))
+                     (set! result (cons current-token result))
+                     (set! current-token ""))
+                   (set! current-token "\"")
+                   (set! in-string? #t)
+                   (loop rest))
+                 (begin
+                   (set! current-token (string-append current-token (string char)))
+                   (loop rest))))]
+
+        ;; Inside any string (regular or multiline)
+        [(or in-string? in-multiline?)
+         (set! current-token (string-append current-token (string char)))
+         (loop rest)]
+
+        ;; Brackets and braces
+        [(or (char=? char #\[) (char=? char #\]) (char=? char #\{) (char=? char #\}))
+         (when (not (string=? current-token ""))
+           (set! result (cons current-token result))
+           (set! current-token ""))
+         (set! result (cons (string char) result))
+         (loop rest)]
+
+        ;; Whitespace
+        [(char-whitespace? char)
+         (when (not (string=? current-token ""))
+           (set! result (cons current-token result))
+           (set! current-token ""))
+         (loop rest)]
+
+        ;; Regular character
+        [else
+         (set! current-token (string-append current-token (string char)))
+         (loop rest)])))
+
   (when (not (string=? current-token ""))
     (set! result (cons current-token result)))
-  
+
   (reverse result))
 
 (define (remove-paren-comments input)
@@ -131,7 +177,12 @@
            (loop rest items))])))
 
 (define (parse-string token)
-  (if (and (string-prefix? token "\"") (string-suffix? token "\""))
-      (substring token 1 (- (string-length token) 1))
-      token))
+  (cond
+    ;; Triple-quoted multiline string
+    [(and (string-prefix? token "\"\"\"") (string-suffix? token "\"\"\""))
+     (substring token 3 (- (string-length token) 3))]
+    ;; Regular string
+    [(and (string-prefix? token "\"") (string-suffix? token "\""))
+     (substring token 1 (- (string-length token) 1))]
+    [else token]))
 

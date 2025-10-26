@@ -1,7 +1,0 @@
-# Test OpenAI Responses API integration
-
-# Simple LLM call
-"What is 2 + 2?" llm.default_cfg llm.call .
-
-# Custom configuration
-"Tell me a joke" {model "gpt-4o" temperature 0.9} llm.call .

@@ -1,0 +1,5 @@
+# String operations
+"hello" "world" concat .
+["a" "b" "c"] " " join .
+["line1" "line2" "line3"] lines .
+"Hello %s, you are %s" "Bob" 30 2 fmt .

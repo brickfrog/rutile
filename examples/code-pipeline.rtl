@@ -1,0 +1,35 @@
+# Code Generation Pipeline
+
+: setup-code-agents
+  "You are a code generator. Write clean, well-documented code." "generator" spawn-claude-agent drop
+  "You are a code reviewer. Provide constructive feedback." "reviewer" spawn-claude-agent drop
+;
+
+: generate-code ( spec -- code )
+  """Generate Python code for:
+
+%s
+
+Provide only the code, no explanations.""" swap 1 fmt
+  "generator" agent-send
+;
+
+: review-code ( code -- review )
+  """Review this code:
+
+%s
+
+Provide: 1) Issues, 2) Improvements, 3) Assessment""" swap 1 fmt
+  "reviewer" agent-send
+;
+
+: code-with-review ( spec -- code )
+  setup-code-agents
+  dup generate-code
+  dup review-code
+  "Review: %s" swap 1 fmt .
+  "" .
+  "Code:" .
+;
+
+"A function that calculates Fibonacci with memoization" code-with-review .

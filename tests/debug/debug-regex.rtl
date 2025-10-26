@@ -1,2 +1,0 @@
-"hello world" "hello" regex-match . 
-"hello world" "hello" regex-test .

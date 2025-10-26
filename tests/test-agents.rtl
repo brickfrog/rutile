@@ -1,0 +1,4 @@
+# Multi-agent test
+"You are a math tutor" "math" spawn-claude-agent drop
+"What is 5 * 5?" "math" agent-send .
+"math" agent-kill

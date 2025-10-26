@@ -1,9 +1,0 @@
-# Test optimization
-"Unoptimized:" .
-[10 20 *] compile show-bytecode
-
-"Optimized:" .
-[10 20 *] compile optimize show-bytecode
-
-"Result:" .
-[10 20 *] compile optimize bytecode-exec .

@@ -1,14 +1,12 @@
 <div align="center">
   <img src="public/logo.png" alt="Rutile Logo" width="200"/>
-  
+
   # Rutile
-  
-  **A concatenative programming language for LLM orchestration**
+
+  **Stack-based language for orchestrating Claude Code agents**
 </div>
 
-> **Experimental DSL** - Rutile is an experimental domain-specific language exploring different ways to interact with LLMs through concatenative programming paradigms.
-
-Rutile is a stack-based (concatenative) programming language built on Racket that makes LLM integration and automation workflows simple and composable. Write AI-powered scripts by chaining words together—no boilerplate, no YAML, just pure function composition.
+Stack-based language for coordinating multiple Claude agents. Wraps the `claude` CLI with concatenative programming primitives.
 
 ## Features
 
@@ -19,15 +17,11 @@ Rutile is a stack-based (concatenative) programming language built on Racket tha
 - **Rich data types**: Numbers, strings, lists, maps, booleans
 - **Bytecode compilation**: Optimized execution with multiple optimization passes
 
-### LLM Integration
-- **OpenAI API support**: Modern Responses API integration
-- **Multiple LLM operations**: `llm-call`, `llm-stream`, `llm-multi-turn`
-- **Advanced features**: 
-  - Image input with `llm-image`
-  - Structured output via JSON schemas
-  - Function calling and tools
-  - Reasoning models support
-- **Model configuration**: Set temperature, max tokens, model selection
+### Claude Integration
+- Spawn multiple Claude agents with different system prompts
+- `claude-call`, `spawn-claude-agent`, `agent-send` primitives
+- Uses `claude --print --output-format json` via subprocess
+- Session persistence per agent
 
 ### Standard Library
 - **Stack operations**: `dup`, `drop`, `swap`, `rot`, `over`, etc.
@@ -72,36 +66,43 @@ rtl new my-bot
 rtl test
 ```
 
-### Example: LLM Text Processing
+### Example: Multi-Agent Research
 ```rut
-# Set up LLM configuration
-{temperature 0.3 max_tokens 300} llm-set-config
+# Spawn specialized research agents
+"You are a technical researcher" "tech" spawn-claude-agent drop
+"You are a business analyst" "biz" spawn-claude-agent drop
 
-# Define a translation and summary word
-: translate-and-summarize ( text target-language -- summary )
-  "Translate this text to " swap concat ": " concat swap concat
-  {temperature 0.2} llm-call
-  "Summarize this text in 2-3 sentences: " swap concat
-  {temperature 0.3} llm-call
-;
+# Parallel research
+"Explain quantum computing" "tech" agent-send
+"Market analysis of quantum computing" "biz" agent-send
 
-# Use it
-"The quick brown fox jumps over the lazy dog."
-"Spanish" translate-and-summarize print
+# Both responses remain on stack for further processing
 ```
 
-### Example: HTTP API Integration
+### Example: Code Generation Pipeline
 ```rut
-# Define an API endpoint handler
-: handle-request ( request -- response )
-  "prompt" swap hash-ref                    # Extract prompt from request
-  {temperature 0.7} llm-call               # Call LLM
-  {content type "application/json"} swap   # Wrap in JSON response
-  hash-set
+# Spawn code agents
+"You are a code generator" "generator" spawn-claude-agent drop
+"You are a code reviewer" "reviewer" spawn-claude-agent drop
+
+# Generate and review code
+"Write a Python function for Fibonacci" "generator" agent-send
+dup "reviewer" agent-send  # Send generated code for review
+```
+
+### Example: Agent-Backed API Service
+```rut
+# Spawn service agents
+"You are a code assistant" "code" spawn-claude-agent drop
+"You are a general assistant" "general" spawn-claude-agent drop
+
+# Route requests to appropriate agent
+: handle-request ( query agent -- response )
+  agent-send
 ;
 
-# Start HTTP server
-8080 "/api/chat" handle-request http-serve
+# Example usage
+"How do I write a Python function?" "code" handle-request
 ```
 
 ## Language Reference
@@ -125,37 +126,44 @@ rtl test
 5 times "hello" print end
 ```
 
-### LLM Operations
+### Claude Operations
 ```rut
-# Basic LLM call
-"Explain photosynthesis" llm-call
+# Basic Claude call
+"Explain photosynthesis" claude-call
 
-# With configuration
-"Write a poem" {temperature 0.9 max_tokens 100} llm-call
+# With system prompt
+{system "You are a science teacher"} "Explain photosynthesis" claude-call
 
-# Multi-turn conversation
-"Hello" llm-multi-turn
-"What's 2+2?" llm-multi-turn
+# Spawn persistent agent
+"You are a helpful assistant" "helper" spawn-claude-agent
+"What can you help with?" "helper" agent-send
 
-# Structured output
-"List three colors" {type "array" items {type "string"}} llm-json-schema
+# Multiple agents working together
+"You are a researcher" "researcher" spawn-claude-agent
+"You are an analyst" "analyst" spawn-claude-agent
+
+"Research quantum computing" "researcher" agent-send
+"Analyze market trends" "analyst" agent-send
 ```
 
 ## Project Structure
 
 ```
 rutile/
-├── rutile/           # Core language implementation
-│   ├── parser.rkt    # Tokenizer and parser
-│   ├── vm.rkt        # Virtual machine
-│   ├── bytecode.rkt  # Bytecode compiler
-│   ├── stdlib.rkt    # Standard library
-│   ├── llm.rkt       # LLM integration
-│   ├── http.rkt      # HTTP client
+├── rutile/                      # Core language implementation
+│   ├── parser.rkt               # Tokenizer and parser
+│   ├── vm.rkt                   # Virtual machine
+│   ├── bytecode.rkt             # Bytecode compiler
+│   ├── stdlib.rkt               # Standard library
+│   ├── claude.rkt               # Claude Code integration
+│   ├── http.rkt                 # HTTP client
 │   └── ...
-├── tests/            # Test suite
-├── examples/         # Example programs
-└── main.rkt          # CLI entry point
+├── tests/                       # Test suite
+├── examples/                    # Example programs
+│   ├── multi-agent-research.rtl # Parallel research agents
+│   ├── code-pipeline.rtl        # Code generation with review
+│   └── agent-api.rtl            # Agent-backed API service
+└── main.rkt                     # CLI entry point
 ```
 
 ## Development
@@ -164,12 +172,13 @@ The language is implemented in Racket and uses a bytecode VM for execution. Key 
 
 - **Parser** (`rutile/parser.rkt`): Tokenization and AST generation
 - **VM** (`rutile/vm.rkt`): Stack-based execution engine
+- **Claude Integration** (`rutile/claude.rkt`): Multi-agent orchestration via Claude Code CLI
 - **Optimizer** (`rutile/optimizer.rkt`): Bytecode optimization passes
 - **Standard Library** (`rutile/stdlib.rkt`): Built-in words and operations
 
 ## Status
 
-Rutile is in active development with core language features, LLM integration, HTTP functionality, and development tools complete.
+Core language works. Claude integration works via subprocess calls. See `examples/` for working multi-agent demos.
 
 ## License
 

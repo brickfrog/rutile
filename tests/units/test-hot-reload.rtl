@@ -1,9 +1,0 @@
-# Test hot reload functionality
-"test-hot-reload.rtl" watch-file
-"Hot reload test!" .
-
-: greet
-  "Hello from hot reload!" .
-;
-
-greet

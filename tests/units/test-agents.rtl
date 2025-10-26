@@ -1,4 +1,0 @@
-# Test place-based concurrency
-[+ 1 2 3] spawn-agent .
-agent-list .
-"Agent concurrency test complete!" .

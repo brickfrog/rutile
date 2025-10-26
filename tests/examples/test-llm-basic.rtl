@@ -1,2 +1,0 @@
-# Very basic LLM test
-llm-default-config "What is 2 + 2?" llm-call print-top

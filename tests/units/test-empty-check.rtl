@@ -1,4 +1,0 @@
-# Test empty? predicate
-[1 2 3] empty? .
-"" empty? .
-"hello" empty? .

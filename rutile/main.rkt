@@ -118,7 +118,7 @@
     [else
      (displayln "Running rutile test suite...")
      (define test-dir "tests")
-     (define test-files 
+     (define test-files
        (if (directory-exists? test-dir)
            (filter (lambda (f) (string-suffix? (path->string f) ".rtl"))
                    (directory-list test-dir))

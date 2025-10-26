@@ -1,8 +1,0 @@
-# Simple hot reload test
-
-"Testing hot reload status..." .
-
-# Check hot reload status
-hot-reload-status .
-
-"Hot reload system loaded successfully!" .

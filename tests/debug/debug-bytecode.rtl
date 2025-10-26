@@ -1,5 +1,0 @@
-# Debug bytecode system
-"Testing bytecode system" .
-[2 3 +] .
-[2 3 +] compile .
-"Done" .

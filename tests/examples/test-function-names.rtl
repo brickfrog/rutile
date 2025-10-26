@@ -1,2 +1,0 @@
-# Test what function names work
-"What is 2 + 2?" llm.default_cfg llm.call .

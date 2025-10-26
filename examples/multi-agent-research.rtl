@@ -1,0 +1,37 @@
+# Multi-Agent Research System
+
+: setup-agents
+  "You are a technical researcher. Provide detailed technical insights." "tech-researcher" spawn-claude-agent drop
+  "You are a business analyst. Focus on market and business implications." "biz-analyst" spawn-claude-agent drop
+  "You are a synthesizer. Combine multiple perspectives into coherent summaries." "synthesizer" spawn-claude-agent drop
+;
+
+: research-technical ( topic -- findings )
+  "Provide technical research on: %s" swap 1 fmt
+  "tech-researcher" agent-send
+;
+
+: research-business ( topic -- findings )
+  "Analyze business implications of: %s" swap 1 fmt
+  "biz-analyst" agent-send
+;
+
+: synthesize-findings ( technical business -- summary )
+  """Synthesize these perspectives:
+
+TECHNICAL:
+%s
+
+BUSINESS:
+%s""" rot rot 2 fmt
+  "synthesizer" agent-send
+;
+
+: parallel-research ( topic -- final-summary )
+  setup-agents
+  dup research-technical swap
+  research-business
+  synthesize-findings
+;
+
+"Quantum Computing" parallel-research .
